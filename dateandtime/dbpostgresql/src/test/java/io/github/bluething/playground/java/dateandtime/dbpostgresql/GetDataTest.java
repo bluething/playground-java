@@ -165,7 +165,7 @@ public class GetDataTest {
     }
 
     @Test
-    public void getTimeStampDataWithRangeFilterReturnDataWithDifferentSize() throws SQLException {
+    public void getTimeStampDataWithRangeFilterButWithoutExtraSecondReturnDataWithDifferentSize() throws SQLException {
         LocalDateTime from = LocalDate.parse("2000-01-01").atStartOfDay();
         LocalDateTime to = LocalDate.parse("2000-01-31").atStartOfDay();
         int expectedDataSize = 8;
