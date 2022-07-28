@@ -4,7 +4,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.sql.*;
+import java.text.DateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class GetDataTest {
 
@@ -32,6 +34,21 @@ public class GetDataTest {
              ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
                 actualDateOfBirth = resultSet.getTimestamp("date_of_birth").toLocalDateTime().toLocalDate();
+            }
+        }
+
+        Assertions.assertEquals(expectedDateOfBirth, actualDateOfBirth);
+    }
+
+    @Test
+    public void getTimeStampDataConvertedToStringValueIsSameWithTheStringValue() throws SQLException {
+        String expectedDateOfBirth = "2000-01-01";
+        String actualDateOfBirth = "";
+        try (Connection connection = DataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT name, date_of_birth FROM person WHERE id = 1");
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                actualDateOfBirth = resultSet.getTimestamp("date_of_birth").toLocalDateTime().toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             }
         }
 
