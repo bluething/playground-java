@@ -113,7 +113,7 @@ public class GetDataTest {
             preparedStatement = connection.prepareStatement(sqlInsert);
             preparedStatement.setLong(1, id);
             preparedStatement.setString(2, "fulan 9");
-            preparedStatement.setTimestamp(3, new Timestamp(LocalDate.parse(expectedDateOfBirth).atStartOfDay(ZoneId.of("UTC")).toInstant().toEpochMilli()));
+            preparedStatement.setObject(3, LocalDate.parse(expectedDateOfBirth).atStartOfDay());
             preparedStatement.executeUpdate();
 
             preparedStatement = connection.prepareStatement(sqlSelect);
