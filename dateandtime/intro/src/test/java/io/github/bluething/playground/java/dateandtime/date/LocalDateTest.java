@@ -38,5 +38,6 @@ public class LocalDateTest {
         System.out.println(localDate.getDayOfMonth());
         System.out.println(localDate.getDayOfWeek());
         System.out.println(localDate.atStartOfDay(ZoneId.of("UTC")).toInstant().toEpochMilli());
+        System.out.println(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli());
     }
 }
