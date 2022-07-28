@@ -6,7 +6,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.sql.*;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
@@ -96,5 +98,39 @@ public class GetDataTest {
         }
 
         Assertions.assertNotEquals(expectedDateOfBirth, actualDateOfBirth);
+    }
+
+    @Test
+    public void getTimeStampDataAfterInsertConvertToEpochMillisIsSameWithTheInput() throws SQLException {
+        String expectedDateOfBirth = "2000-10-10";
+        String actualDateOfBirth = "";
+        final long id = 9L;
+        String sqlInsert = "INSERT INTO person (id, name, date_of_birth) VALUES (?, ?, ?)";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sqlInsert);) {
+            preparedStatement.setLong(1, id);
+            preparedStatement.setString(2, "fulan 9");
+            preparedStatement.setTimestamp(3, new Timestamp(LocalDate.parse(expectedDateOfBirth).atStartOfDay(ZoneId.of("UTC")).toInstant().toEpochMilli()));
+            preparedStatement.executeUpdate();
+        }
+
+        String sqlSelect = "SELECT name, date_of_birth FROM person WHERE id = ?";
+        Timestamp timestamp = null;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sqlSelect);) {
+            preparedStatement.setLong(1, id);
+            try (ResultSet resultSet = preparedStatement.executeQuery();) {
+                while (resultSet.next()) {
+                    timestamp = resultSet.getTimestamp("date_of_birth");
+                    actualDateOfBirth = timestamp.toLocalDateTime().toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                }
+            }
+        }
+
+        String sqlDelete = "DELETE FROM person WHERE id = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sqlDelete);) {
+            preparedStatement.setLong(1, id);
+            preparedStatement.executeUpdate();
+        }
+
+        Assertions.assertEquals(expectedDateOfBirth, actualDateOfBirth);
     }
 }
