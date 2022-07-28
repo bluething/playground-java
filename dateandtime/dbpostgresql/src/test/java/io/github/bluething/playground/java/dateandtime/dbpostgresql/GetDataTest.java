@@ -6,10 +6,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.sql.*;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 public class GetDataTest {
@@ -146,5 +143,24 @@ public class GetDataTest {
         }
 
         Assertions.assertEquals(expectedDateOfBirth, actualDateOfBirth);
+    }
+
+    @Test
+    public void getTimeStampDataWithRangeFilterReturnDataWithExpectedSize() throws SQLException {
+        LocalDateTime from = LocalDate.parse("2000-01-01").atStartOfDay();
+        LocalDateTime to = LocalDate.parse("2000-01-31").atStartOfDay().plusSeconds(86399);
+        int expectedDataSize = 8;
+        int actualDataSize = 0;
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT id, date_of_birth FROM person WHERE date_of_birth BETWEEN ? AND ?")) {
+            preparedStatement.setObject(1, from);
+            preparedStatement.setObject(2, to);
+            try (ResultSet resultSet = preparedStatement.executeQuery();) {
+                while (resultSet.next()) {
+                    actualDataSize++;
+                }
+            }
+        }
+
+        Assertions.assertEquals(expectedDataSize, actualDataSize);
     }
 }
