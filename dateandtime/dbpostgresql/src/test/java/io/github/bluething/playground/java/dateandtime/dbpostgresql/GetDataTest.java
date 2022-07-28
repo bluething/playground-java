@@ -182,4 +182,42 @@ public class GetDataTest {
 
         Assertions.assertNotEquals(expectedDataSize, actualDataSize);
     }
+
+    @Test
+    public void getTimeStampDataWithRangeFilterUsingTimestampAsBindingParamReturnDataWithDifferentSize() throws SQLException {
+        Timestamp from = new Timestamp(LocalDate.parse("2000-01-01").atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli());
+        Timestamp to = new Timestamp(LocalDate.parse("2000-01-31").atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli());
+        int expectedDataSize = 8;
+        int actualDataSize = 0;
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT id, date_of_birth FROM person WHERE date_of_birth BETWEEN ? AND ?")) {
+            preparedStatement.setTimestamp(1, from);
+            preparedStatement.setTimestamp(2, to);
+            try (ResultSet resultSet = preparedStatement.executeQuery();) {
+                while (resultSet.next()) {
+                    actualDataSize++;
+                }
+            }
+        }
+
+        Assertions.assertNotEquals(expectedDataSize, actualDataSize);
+    }
+
+    @Test
+    public void getTimeStampDataWithRangeFilterUsingTimestampAsBindingParamWithExtraSecondReturnDataWithDifferentSize() throws SQLException {
+        Timestamp from = new Timestamp(LocalDate.parse("2000-01-01").atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli());
+        Timestamp to = new Timestamp(LocalDate.parse("2000-01-31").atStartOfDay().toInstant(ZoneOffset.UTC).plusSeconds(86399).toEpochMilli());
+        int expectedDataSize = 8;
+        int actualDataSize = 0;
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT id, date_of_birth FROM person WHERE date_of_birth BETWEEN ? AND ?")) {
+            preparedStatement.setTimestamp(1, from);
+            preparedStatement.setTimestamp(2, to);
+            try (ResultSet resultSet = preparedStatement.executeQuery();) {
+                while (resultSet.next()) {
+                    actualDataSize++;
+                }
+            }
+        }
+
+        Assertions.assertNotEquals(expectedDataSize, actualDataSize);
+    }
 }
