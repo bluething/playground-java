@@ -163,4 +163,23 @@ public class GetDataTest {
 
         Assertions.assertEquals(expectedDataSize, actualDataSize);
     }
+
+    @Test
+    public void getTimeStampDataWithRangeFilterReturnDataWithDifferentSize() throws SQLException {
+        LocalDateTime from = LocalDate.parse("2000-01-01").atStartOfDay();
+        LocalDateTime to = LocalDate.parse("2000-01-31").atStartOfDay();
+        int expectedDataSize = 8;
+        int actualDataSize = 0;
+        try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT id, date_of_birth FROM person WHERE date_of_birth BETWEEN ? AND ?")) {
+            preparedStatement.setObject(1, from);
+            preparedStatement.setObject(2, to);
+            try (ResultSet resultSet = preparedStatement.executeQuery();) {
+                while (resultSet.next()) {
+                    actualDataSize++;
+                }
+            }
+        }
+
+        Assertions.assertNotEquals(expectedDataSize, actualDataSize);
+    }
 }
