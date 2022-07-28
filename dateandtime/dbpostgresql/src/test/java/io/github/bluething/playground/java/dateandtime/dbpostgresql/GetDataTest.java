@@ -106,29 +106,43 @@ public class GetDataTest {
         String actualDateOfBirth = "";
         final long id = 9L;
         String sqlInsert = "INSERT INTO person (id, name, date_of_birth) VALUES (?, ?, ?)";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sqlInsert);) {
+        String sqlSelect = "SELECT name, date_of_birth FROM person WHERE id = ?";
+        String sqlDelete = "DELETE FROM person WHERE id = ?";
+        Timestamp timestamp = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            connection.setAutoCommit(false);
+            preparedStatement = connection.prepareStatement(sqlInsert);
             preparedStatement.setLong(1, id);
             preparedStatement.setString(2, "fulan 9");
             preparedStatement.setTimestamp(3, new Timestamp(LocalDate.parse(expectedDateOfBirth).atStartOfDay(ZoneId.of("UTC")).toInstant().toEpochMilli()));
             preparedStatement.executeUpdate();
-        }
 
-        String sqlSelect = "SELECT name, date_of_birth FROM person WHERE id = ?";
-        Timestamp timestamp = null;
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sqlSelect);) {
+            preparedStatement = connection.prepareStatement(sqlSelect);
             preparedStatement.setLong(1, id);
-            try (ResultSet resultSet = preparedStatement.executeQuery();) {
-                while (resultSet.next()) {
-                    timestamp = resultSet.getTimestamp("date_of_birth");
-                    actualDateOfBirth = timestamp.toLocalDateTime().toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                }
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                timestamp = resultSet.getTimestamp("date_of_birth");
+                actualDateOfBirth = timestamp.toLocalDateTime().toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             }
-        }
 
-        String sqlDelete = "DELETE FROM person WHERE id = ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sqlDelete);) {
+            preparedStatement = connection.prepareStatement(sqlDelete);
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
+        } catch (SQLException sqlException) {
+            connection.rollback();
+            throw new SQLException(sqlException);
+        } finally {
+            connection.commit();
+
+            if (!resultSet.isClosed()) {
+                resultSet.close();
+            }
+
+            if (!preparedStatement.isClosed()) {
+                preparedStatement.close();
+            }
         }
 
         Assertions.assertEquals(expectedDateOfBirth, actualDateOfBirth);
