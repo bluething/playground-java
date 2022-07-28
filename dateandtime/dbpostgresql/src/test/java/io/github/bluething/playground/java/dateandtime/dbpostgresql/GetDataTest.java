@@ -27,12 +27,12 @@ public class GetDataTest {
 
     @Test
     public void getTimeStampDataIsSameWithTimestampGeneratedFromString() throws SQLException {
-        Timestamp expectedDateOfBirth = Timestamp.valueOf("2000-01-01 00:00:00");
-        Timestamp actualDateOfBirth = null;
+        LocalDateTime expectedDateOfBirth = LocalDate.parse("2000-01-01").atStartOfDay();
+        LocalDateTime actualDateOfBirth = null;
         try (PreparedStatement preparedStatement = connection.prepareStatement("SELECT name, date_of_birth FROM person WHERE id = 1");
              ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
-                actualDateOfBirth = resultSet.getTimestamp("date_of_birth");
+                actualDateOfBirth = resultSet.getTimestamp("date_of_birth").toLocalDateTime();
             }
         }
 
