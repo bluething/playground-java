@@ -29,6 +29,8 @@ public class ClockTest {
         System.out.println(instant2);
     }
 
+    // A clock providing access to the current instant, date and time using a time-zone.
+    // Best practice for applications is to pass a Clock into any method that requires the current instant.
     @Test
     public void fromClock() {
         Clock clock = Clock.system(ZoneId.of("Asia/Jakarta"));
