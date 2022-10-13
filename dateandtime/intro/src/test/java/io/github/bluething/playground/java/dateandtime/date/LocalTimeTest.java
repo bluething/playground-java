@@ -51,4 +51,11 @@ public class LocalTimeTest {
         System.out.println("Second: " + localTime.getSecond());
         System.out.println("Nanos: " + localTime.getNano());
     }
+
+    @Test
+    public void transform() {
+        LocalTime localTime = LocalTime.now();
+        System.out.println(localTime);
+        System.out.println(localTime.toSecondOfDay());
+    }
 }
