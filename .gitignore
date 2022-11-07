@@ -217,3 +217,6 @@ gradle-app.setting
 # JDT-specific (Eclipse Java Development Tools)
 
 # End of https://www.toptal.com/developers/gitignore/api/java,linux,gradle,windows,intellij,maven
+
+# I ignore this file to avoid unexpected merge
+.idea/misc.xml
