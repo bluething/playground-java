@@ -7,10 +7,16 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Hello world!");
 
-        Supplier<String> supplier = () -> "Hii";
+        Supplier<String> supplier = () -> {
+            System.out.println("Inside supplier");
+            return "Hii";
+        };
         System.out.println("supplier: " + supplier.get());
 
-        Consumer<String> consumer = s -> System.out.println("consume: " + s);
+        Consumer<String> consumer = s -> {
+            System.out.println("Inside consumer");
+            System.out.println("consume: " + s);
+        };
         consumer.accept(supplier.get());
     }
 }
