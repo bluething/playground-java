@@ -22,6 +22,20 @@ public class Main {
             }
         }
     }
+    public static void selectionSort(int[] arr) {
+        int n = arr.length;
+        for (int i = 0; i < n - 1; i++) {
+            int minIndex = i;
+            for (int j = i+1; j < n; j++) {
+                if (arr[j] < arr[minIndex]) {
+                    minIndex = j;
+                }
+            }
+            int temp = arr[i];
+            arr[i] = arr[minIndex];
+            arr[minIndex] = temp;
+        }
+    }
     public static void main(String[] args) {
         if (args.length != 1) {
             System.err.println("Please specify one of: BS | SS | MS | QS | HS | CS | BuS |ShS");
@@ -32,16 +46,29 @@ public class Main {
         int[] sources = generateDistinctShuffledArray(size);
         String algorithm = args[0];
 
+        int[] arr;
+        long start, end;
         switch (algorithm) {
             case "BS":
-                int[] arr = sources.clone();
+                arr = sources.clone();
                 System.out.println("Sort using Bubble Sort algorithm");
                 System.out.println("Is array sorted before sorting? " + isSorted(arr));
-                long start = System.nanoTime();
+                start = System.nanoTime();
                 bubbleSort(arr);
-                long end = System.nanoTime();
+                end = System.nanoTime();
                 System.out.println("Is array sorted after sorting? " + isSorted(arr));
                 System.out.println("Elapsed time: " + (end - start) / 1_000_000 + " ms");
+                break;
+            case "SS":
+                arr = sources.clone();
+                System.out.println("Sort using Selection Sort algorithm");
+                System.out.println("Is array sorted before sorting? " + isSorted(arr));
+                start = System.nanoTime();
+                selectionSort(arr);
+                end = System.nanoTime();
+                System.out.println("Is array sorted after sorting? " + isSorted(arr));
+                System.out.println("Elapsed time: " + (end - start) / 1_000_000 + " ms");
+                break;
         }
     }
 
