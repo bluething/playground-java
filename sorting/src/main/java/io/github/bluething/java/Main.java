@@ -36,9 +36,61 @@ public class Main {
             arr[minIndex] = temp;
         }
     }
+    public static void insertionSort(int[] arr) {
+        int n = arr.length;
+        for (int i = 1; i < n; i++) {
+            int temp = arr[i];  // Take the current element (the one to be inserted)
+            int j = i - 1;      // Start comparing with the previous element
+            // Shift elements that are greater than temp to one position ahead
+            while (j >= 0 && arr[j] > temp) {
+                arr[j + 1] = arr[j];
+                j--;
+            }
+            arr[j + 1] = temp;
+        }
+    }
+    public static void mergeSort(int[] arr) {
+        if (arr.length < 2) {
+            return;
+        }
+        mergeSortHelper(arr, 0, arr.length - 1);
+    }
+    private static void mergeSortHelper(int[] arr, int left, int right) {
+        if (left < right) {
+            int mid = left + (right - left) / 2;
+            mergeSortHelper(arr, left, mid);                 // sort left half
+            mergeSortHelper(arr, mid + 1, right);       // sort right half
+            merge(arr, left, mid, right);                   // merge sorted halves
+        }
+    }
+    private static void merge(int[] arr, int left, int mid, int right) {
+        int n1 = mid - left + 1;
+        int n2 = right - mid;
+        int[] L = new int[n1];
+        int[] R = new int[n2];
+
+        System.arraycopy(arr, left, L, 0, n1);
+        System.arraycopy(arr, mid + 1, R, 0, n2);
+
+        int i = 0, j = 0, k = left;
+        while (i < n1 && j < n2) {
+            if (L[i] <= R[j]) {
+                arr[k++] = L[i++];
+            } else {
+                arr[k++] = R[j++];
+            }
+        }
+
+        while (i < n1) {
+            arr[k++] = L[i++];
+        }
+        while (j < n2) {
+            arr[k++] = R[j++];
+        }
+    }
     public static void main(String[] args) {
         if (args.length != 1) {
-            System.err.println("Please specify one of: BS | SS | MS | QS | HS | CS | BuS |ShS");
+            System.err.println("Please specify one of: BS | SS | IS | MS | QS | HS | CS | BuS |ShS");
             System.exit(1);
         }
 
@@ -65,6 +117,26 @@ public class Main {
                 System.out.println("Is array sorted before sorting? " + isSorted(arr));
                 start = System.nanoTime();
                 selectionSort(arr);
+                end = System.nanoTime();
+                System.out.println("Is array sorted after sorting? " + isSorted(arr));
+                System.out.println("Elapsed time: " + (end - start) / 1_000_000 + " ms");
+                break;
+            case "IS":
+                arr = sources.clone();
+                System.out.println("Sort using Insertion Sort algorithm");
+                System.out.println("Is array sorted before sorting? " + isSorted(arr));
+                start = System.nanoTime();
+                insertionSort(arr);
+                end = System.nanoTime();
+                System.out.println("Is array sorted after sorting? " + isSorted(arr));
+                System.out.println("Elapsed time: " + (end - start) / 1_000_000 + " ms");
+                break;
+            case "MS":
+                arr = sources.clone();
+                System.out.println("Sort using Merge Sort algorithm");
+                System.out.println("Is array sorted before sorting? " + isSorted(arr));
+                start = System.nanoTime();
+                mergeSort(arr);
                 end = System.nanoTime();
                 System.out.println("Is array sorted after sorting? " + isSorted(arr));
                 System.out.println("Elapsed time: " + (end - start) / 1_000_000 + " ms");
