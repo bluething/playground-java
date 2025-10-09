@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/java,linux,maven,gradle,windows,intellij+all
-# Edit at https://www.toptal.com/developers/gitignore?templates=java,linux,maven,gradle,windows,intellij+all
+# Created by https://www.toptal.com/developers/gitignore/api/java,linux,maven,gradle,windows,intellij+all,visualstudiocode
+# Edit at https://www.toptal.com/developers/gitignore?templates=java,linux,maven,gradle,windows,intellij+all,visualstudiocode
 
 ### Intellij+all ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
@@ -149,6 +149,25 @@ buildNumber.properties
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
 
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+.ionide
+
 ### Windows ###
 # Windows thumbnail cache files
 Thumbs.db
@@ -200,4 +219,4 @@ gradle-app.setting
 # Java heap dump
 *.hprof
 
-# End of https://www.toptal.com/developers/gitignore/api/java,linux,maven,gradle,windows,intellij+all
+# End of https://www.toptal.com/developers/gitignore/api/java,linux,maven,gradle,windows,intellij+all,visualstudiocode
