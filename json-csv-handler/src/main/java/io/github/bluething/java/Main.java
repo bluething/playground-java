@@ -9,6 +9,7 @@ public class Main {
 
         String mode = args[0];
         JsonParser jsonParser;
+        CSVReader csvReader;
         String input;
         switch (mode) {
             case "SJ":
@@ -58,6 +59,41 @@ public class Main {
                         }
                         """;
                 jsonParser.parse(input);
+                break;
+            case "SCSV":
+                csvReader = new SimpleCSV();
+                csvReader.read("small-csv.csv");;
+                break;
+            case "WHCSV":
+                csvReader = new CSVWithoutHeader();
+                csvReader.read("small-csv.csv");
+                break;
+            case "DCSV":
+                csvReader = new DelimiterCSV();
+                csvReader.read("small-csv.csv");
+                break;
+            case "QCSV":
+                csvReader = new QuotedCSV();
+                input = """
+                        name,description,price
+                        "Product A","A simple product",29.99
+                        "Product B","Contains ""quotes"" and, commas",49.99
+                        "Product C","Line 1
+                        Line 2",19.99
+                        """;
+                csvReader.read(input);
+                break;
+            case "MFCSV":
+                csvReader = new MissingFieldCSV();
+                input = """
+                        id,name,email,phone
+                        1,Alice,alice@example.com,555-1234
+                        2,Bob,,555-5678
+                        3,Charlie,charlie@example.com,
+                        4,,,555-9999
+                        """;
+                csvReader.read(input);
+                break;
         }
     }
 }
