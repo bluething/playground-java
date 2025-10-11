@@ -2,6 +2,62 @@ package io.github.bluething.java;
 
 public class Main {
     public static void main(String[] args) {
+        if (args.length != 1) {
+            System.err.println("Please specify one of: SJ");
+            System.exit(1);
+        }
 
+        String mode = args[0];
+        JsonParser jsonParser;
+        String input;
+        switch (mode) {
+            case "SJ":
+                jsonParser = new SimpleJson();
+                input = """
+                        {
+                            "name": "Alice",
+                            "age": 30,
+                            "email": "alice@example.com",
+                            "active": true
+                        }
+                        """;
+                jsonParser.parse(input);
+                break;
+            case "FJ":
+                jsonParser = new JsonFile();
+                jsonParser.parse("small-json.json");
+                break;
+            case "ARRJ":
+                jsonParser = new JsonArray();
+                input = """
+                        [
+                            {"id": 1, "name": "Product A", "price": 29.99},
+                            {"id": 2, "name": "Product B", "price": 49.99},
+                            {"id": 3, "name": "Product C", "price": 19.99}
+                        ]
+                        """;
+                jsonParser.parse(input);
+                break;
+            case "NJ":
+                jsonParser = new NestedJson();
+                input = """
+                        {
+                            "user": {
+                                "id": 123,
+                                "name": "John Doe",
+                                "address": {
+                                    "street": "123 Main St",
+                                    "city": "Springfield",
+                                    "zipcode": "12345"
+                                },
+                            "orders": [
+                                {"orderId": "A001", "total": 99.99},
+                                {"orderId": "A002", "total": 149.99}
+                                ]
+                            }
+                        }
+                        """;
+                jsonParser.parse(input);
+        }
     }
 }
